@@ -1,3 +1,4 @@
+import webob.exc
 from nezha.api import wsgi
 
 class ServersController(object):
@@ -5,7 +6,7 @@ class ServersController(object):
         pass
 
     def index(self, req):
-        return {'servers':[]}
+        raise webob.exc.HTTPBadRequest(explanation=unicode("not implement!"))
 
     def show(sefl, req, server_id):
         return {'server': server_id}

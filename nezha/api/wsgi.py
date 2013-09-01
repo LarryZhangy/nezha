@@ -5,6 +5,8 @@ import time
 import webob.dec
 import webob.exc
 
+from nezha import wsgi
+
 
 class JSONRequestDeserializer(object):
     def has_body(self, request):
@@ -55,6 +57,8 @@ class JSONResponseSerializer(object):
         response.content_type = 'application/json'
         response.body = self.to_json(result)
 
+class Request(webob.Request):
+    pass
 
 class Resource(object):
     """

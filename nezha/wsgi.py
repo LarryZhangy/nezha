@@ -1,16 +1,17 @@
+import sys
+import ssl
 import os.path
 import socket
-import sys
 
 import eventlet
 import eventlet.wsgi
 import greenlet
-from oslo.config import cfg
-from paste import deploy
-import routes.middleware
-import ssl
 import webob.dec
 import webob.exc
+import routes.middleware
+from paste import deploy
+
+from oslo.config import cfg
 
 from nezha import exception
 from nezha.openstack.common import excutils
@@ -204,6 +205,67 @@ class Server(object):
         except greenlet.GreenletExit:
             LOG.info(_("WSGI server has stopped."))
 
+class Middleware(object):
+    """
+    Base WSGI middleware wrapper. These classes require an application to be
+    initialized that will be called next.  By default the middleware will
+    simply call its wrapped app, or you can override __call__ to customize its
+    behavior.
+    """
+
+    @classmethod
+    def factory(cls, global_config, **local_config):
+        """Used for paste app factories in paste.deploy config files.
+
+        Any local configuration (that is, values under the [filter:APPNAME]
+        section of the paste config) will be passed into the `__init__` method
+        as kwargs.
+        
+        A hypothetical configuration would look like:
+        
+        [filter:analytics]
+        redis_host = 127.0.0.1
+        paste.filter_factory = nova.api.analytics:Analytics.factory
+        
+        which would result in a call to the `Analytics` class as
+        
+        import nova.api.analytics
+        analytics.Analytics(app_from_paste, redis_host='127.0.0.1')
+        
+        You could of course re-implement the `factory` method in subclasses,
+        but using the kwarg passing it shouldn't be necessary.
+        
+        """
+        def _factory(app):
+            return cls(app, **local_config)
+        return _factory
+
+    def __init__(self, application):
+        self.application = application
+
+    def process_request(self, req):
+        """
+        Called on each request.
+
+        If this returns None, the next application down the stack will be
+        executed. If it returns a response then that response will be returned
+        and execution will stop here.
+
+        """
+        return None
+
+    def process_response(self, response):
+        """Do whatever you'd like to the response."""
+        return response
+
+    @webob.dec.wsgify
+    def __call__(self, req):
+        response = self.process_request(req)
+        if response:
+            return response
+        response = req.get_response(self.application)
+        return self.process_response(response)
+
 
 class Loader(object):
     """Used to load WSGI applications from paste configurations."""
@@ -238,3 +300,78 @@ class Loader(object):
         except LookupError as err:
             LOG.error(err)
             raise exception.PasteAppNotFound(name=name, path=self.config_path)
+
+class APIMapper(routes.Mapper):
+    """
+    Handle route matching when url is '' because routes.Mapper returns
+    an error in this case.     
+    """
+      
+    def routematch(self, url=None, environ=None): 
+        if url is "":          
+            result = self._match("", environ)
+            return result[0], result[1] 
+        return routes.Mapper.routematch(self, url, environ)
+
+
+class Request(webob.Request):
+    pass
+
+class Router(object):
+    """WSGI middleware that maps incoming requests to WSGI apps."""
+
+    def __init__(self, mapper):
+        """Create a router for the given routes.Mapper.
+
+        Each route in `mapper` must specify a 'controller', which is a
+        WSGI app to call. You'll probably want to specify an 'action' as
+        well and have your controller be an object that can route
+        the request to the action-specific method.
+        
+        Examples:
+        mapper = routes.Mapper()
+        sc = ServerController()
+        
+        # Explicit mapping of one route to a controller+action
+        mapper.connect(None, '/svrlist', controller=sc, action='list')
+        
+        # Actions are all implicitly defined
+        mapper.resource('server', 'servers', controller=sc)
+        
+        # Pointing to an arbitrary WSGI app. You can specify the
+        # {path_info:.*} parameter so the target app can be handed just that
+        # section of the URL.
+        mapper.connect(None, '/v1.0/{path_info:.*}', controller=BlogApp())
+        
+        """
+        self.map = mapper
+        self._router = routes.middleware.RoutesMiddleware(self._dispatch,
+                                                          self.map)
+
+    @classmethod
+    def factory(cls, global_conf, **local_conf):
+        return cls(APIMapper())
+    @webob.dec.wsgify(RequestClass=Request)
+    def __call__(self, req):
+        """Route the incoming request to a controller based on self.map.
+
+        If no match, return a 404.
+        
+        """
+        return self._router
+
+    @staticmethod
+    @webob.dec.wsgify(RequestClass=Request)
+    def _dispatch(req):
+        """Dispatch the request to the appropriate controller.
+
+        Called by self._router after matching the incoming request to a route
+        and putting the information into req.environ. Either returns 404
+        or the routed WSGI app's response.
+        
+        """
+        match = req.environ['wsgiorg.routing_args'][1]
+        if not match:
+            return webob.exc.HTTPNotFound()
+        app = match['controller']
+        return app

@@ -1,3 +1,15 @@
+commit 10828b93492f9107fd42e41855ffb7c3517932c0
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Wed Aug 28 08:05:40 2013 -0700
+
+    rm file of pyc.
+
+commit 50b6edd34ee5df3327d7767c17e9a774ecb0be15
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Wed Aug 28 08:04:09 2013 -0700
+
+    use pbr to build app.
+
 commit 7c3482330e61fc6037c94c415dcee9b8be835b64
 Author: LarryZhangy <zileiye@gmail.com>
 Date:   Wed Aug 28 06:10:01 2013 -0700
