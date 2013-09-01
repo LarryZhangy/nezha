@@ -67,3 +67,6 @@ class ConfigNotFound(NezhaException):
 
 class PasteAppNotFound(NezhaException):
     msg_fmt = _("Could not load paste app '%(name)s' from %(path)s")
+
+class ServerNotFound(NezhaException):
+    msg_fmt = _("Server '%(id)s not find.'")
