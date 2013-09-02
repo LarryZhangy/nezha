@@ -20,3 +20,7 @@ def server_get(context, server_id):
     """Get a service or raise if it does not exist."""
     return IMPL.server_get(context, server_id)
 
+def server_create(context, values):
+    """Create a server from the values dictionary."""
+    return IMPL.server_create(context, values)
+

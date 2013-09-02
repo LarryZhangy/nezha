@@ -62,11 +62,19 @@ class NotFound(NezhaException):
     msg_fmt = _("Resource could not be found.")
     code = 404
 
-class ConfigNotFound(NezhaException):
+class ConfigNotFound(NotFound):
     msg_fmt = _("Could not find config at %(path)s")
 
-class PasteAppNotFound(NezhaException):
+class PasteAppNotFound(NotFound):
     msg_fmt = _("Could not load paste app '%(name)s' from %(path)s")
 
-class ServerNotFound(NezhaException):
-    msg_fmt = _("Server '%(id)s not find.'")
+class ServerNotFound(NotFound):
+    msg_fmt = _("Server '%(id)s' not find.")
+
+class ServerExists(NezhaException):
+    code = 409
+    msg_fmt = _("Server '%(ip)s' had exists.")
+
+class Forbidden(NezhaException):
+    code = 403
+    msg_fmt = _("You are not authorized to complite this action.")

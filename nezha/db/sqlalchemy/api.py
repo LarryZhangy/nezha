@@ -26,15 +26,15 @@ from sqlalchemy.sql.expression import select
 from sqlalchemy.sql import func
 from sqlalchemy import String
 
-from nova import db
-from nova.db.sqlalchemy import models
-from nova import exception
-from nova.openstack.common.db import exception as db_exc
-from nova.openstack.common.db.sqlalchemy import session as db_session
-from nova.openstack.common.gettextutils import _
+from nezha import db
+from nezha.db.sqlalchemy import models
+from nezha import exception
+from nezha.openstack.common.db import exception as db_exc
+from nezha.openstack.common.db.sqlalchemy import session as db_session
+from nezha.openstack.common.gettextutils import _
 from nezha.openstack.common import log as logging
-from nova.openstack.common import timeutils
-from nova.openstack.common import uuidutils
+from nezha.openstack.common import timeutils
+from nezha.openstack.common import uuidutils
 
 CONF = cfg.CONF
 LOG = logging.getLogger(__name__)
@@ -42,12 +42,27 @@ LOG = logging.getLogger(__name__)
 get_engine = db_session.get_engine
 get_session = db_session.get_session
 
+def get_backend():
+    """The backend is this module itself."""
+    return sys.modules[__name__]
+
 
 def server_get(context, server_id):
     session = get_session()
     query = session.query(models.Server).filter_by(id=server_id)
     result = query.first()
     if not result:
-        raise exception.ServerNotFound(service_id=service_id)
+        raise exception.ServerNotFound(server_id=server_id)
 
     return result
+
+def server_create(context, values):
+    server_ref = models.Server()
+    server_ref.update(values)
+
+    try:
+        server_ref.save()
+    except db_exc.DBDuplicateEntry:
+        raise exception.ServerExists(ip=values.get('ip'))
+
+    return server_ref

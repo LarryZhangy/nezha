@@ -17,4 +17,9 @@ class API(wsgi.Router):
                        action='show',
                        conditions={'method': ['GET']})
 
+        mapper.connect('/servers',
+                       controller=servers_resource,
+                       action='create',
+                       conditions={'method': ['POST']})
+
         super(API, self).__init__(mapper)

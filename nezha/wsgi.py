@@ -225,11 +225,11 @@ class Middleware(object):
         
         [filter:analytics]
         redis_host = 127.0.0.1
-        paste.filter_factory = nova.api.analytics:Analytics.factory
+        paste.filter_factory = nezha.api.analytics:Analytics.factory
         
         which would result in a call to the `Analytics` class as
         
-        import nova.api.analytics
+        import nezha.api.analytics
         analytics.Analytics(app_from_paste, redis_host='127.0.0.1')
         
         You could of course re-implement the `factory` method in subclasses,
@@ -290,7 +290,7 @@ class Loader(object):
 
         :param name: Name of the application to load.
         :returns: Paste URLMap object wrapping the requested application.
-        :raises: `nova.exception.PasteAppNotFound`
+        :raises: `nezha.exception.PasteAppNotFound`
         
         """
         try:

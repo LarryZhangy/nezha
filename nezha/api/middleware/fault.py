@@ -5,7 +5,8 @@ from nezha import exception
 from nezha.openstack.common import log as logging
 import nezha.openstack.common.rpc.common as rpc_common
 
-from nezha import wsgi
+from nezha import wsgi as base_wsgi
+from nezha.api import wsgi
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +26,7 @@ class Fault(object):
         return resp
 
 
-class FaultWrapper(wsgi.Middleware):
+class FaultWrapper(base_wsgi.Middleware):
     """Replace error body with something the client can parse."""
 
     error_map = {
@@ -52,12 +53,6 @@ class FaultWrapper(wsgi.Middleware):
 
         trace = None
         webob_exc = None
-        if isinstance(ex, exception.HTTPExceptionDisguise):
-            # An HTTP exception was disguised so it could make it here
-            # let's remove the disguise and set the original HTTP exception
-            trace = ''.join(traceback.format_tb(ex.tb))
-            ex = ex.exc
-            webob_exc = ex
 
         ex_type = ex.__class__.__name__
 

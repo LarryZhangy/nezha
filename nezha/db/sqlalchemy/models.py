@@ -29,7 +29,7 @@ class NezhaBase(models.SoftDeleteMixin,
 class Server(BASE, NezhaBase):
     """Represents a running server on a host."""
 
-    __tablename__ = 'servers'
+    __tablename__ = 'server'
     __table_args__ = ()
 
     id = Column(Integer, primary_key=True)
