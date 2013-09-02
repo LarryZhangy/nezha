@@ -7,7 +7,7 @@ IMPL = utils.LazyPluggable('backend',
                            config_group='database',
                            sqlalchemy='nezha.db.sqlalchemy.migration')
 
-INIT_VERSION = 0
+INIT_VERSION = 000
 
 
 def db_sync(version=None):
