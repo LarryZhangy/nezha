@@ -12,7 +12,7 @@ class ServersController(object):
         pass
 
     def index(self, req):
-        raise webob.exc.HTTPNotimplemented()
+        raise webob.exc.HTTPNotImplemented()
 
     def show(self, req, server_id):
         try:
