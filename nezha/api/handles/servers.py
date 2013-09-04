@@ -22,7 +22,7 @@ class ServersController(object):
         except exception.NotFound, e:
             raise webob.exc.HTTPNotFound()
 
-        return server.to_dict()
+        return dict(server)
 
     def create(self, req, body):
         try:

@@ -35,6 +35,7 @@ class Server(BASE, NezhaBase):
     id = Column(Integer, primary_key=True)
     ip = Column(String(255))
     status = Column(String(255), default='free')
+    host = Column(String(255))
 
 
 
