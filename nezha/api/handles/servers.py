@@ -5,7 +5,9 @@ from nezha.api import wsgi
 from nezha.handles import servers
 from nezha.openstack.common import log as logging
 
-LOG= logging.getLogger(__name__)
+
+LOG = logging.getLogger(__name__)
+
 
 class ServersController(object):
     def __init__(self):

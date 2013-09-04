@@ -11,5 +11,3 @@ def get_server(server_id, ctxt=None):
 
 def create_server(values, ctxt=None):
     return db.server_create(ctxt, values)
-    
-

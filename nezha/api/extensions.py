@@ -25,7 +25,7 @@ class BaseExtension(object):
 
     def get_resource(self):
         return ExtensionResource(
-                self.name, 
-                self.resource,
-                self.controller
-            )
+                        self.name, 
+                        self.resource,
+                        self.controller
+                        )

@@ -153,8 +153,8 @@ class Server(object):
                 # This option isn't available in the OS X version of eventlet
                 if hasattr(socket, 'TCP_KEEPIDLE'):
                     self._socket.setsockopt(socket.IPPROTO_TCP,
-                                    socket.TCP_KEEPIDLE,
-                                    CONF.tcp_keepidle)
+                                            socket.TCP_KEEPIDLE,
+                                            CONF.tcp_keepidle)
 
             except Exception:
                 with excutils.save_and_reraise_exception():

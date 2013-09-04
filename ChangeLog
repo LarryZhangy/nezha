@@ -1,3 +1,57 @@
+commit 08a07ec8b46e8e584971a7f7ce6c9b56dd6564c2
+Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
+Date:   Tue Sep 3 14:46:55 2013 +0800
+
+    support extensions api
+
+commit 0524fa1d0d44ff29e7a97da0538493415b1f66f3
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Mon Sep 2 09:01:55 2013 -0700
+
+    make db layer can run.
+
+commit d7edc9cfbb6245838b25b75e511595a67f219b4d
+Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
+Date:   Mon Sep 2 09:46:27 2013 +0800
+
+    add manage to sync db.
+
+commit 871fff8acee56204e812347ab137c8504c423596
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Sun Sep 1 08:18:10 2013 -0700
+
+    add db layer.
+
+commit 5a642bba88a3babf0d4f129e1bb2bc9864789396
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Sun Sep 1 02:27:35 2013 -0700
+
+    commit changed files.
+
+commit e222b092fe8cf34ad416973a827c44374ffed7c6
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Sun Sep 1 02:15:40 2013 -0700
+
+    add middleware to warp falut
+
+commit 35102dd37bf7fc0fee1487a2157963be4ccdd9eb
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Sun Sep 1 01:34:00 2013 -0700
+
+    rm swp file.
+
+commit 6d4faa1c22b17b95c4ae6f24d52f8d2771886260
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Sun Sep 1 01:32:07 2013 -0700
+
+    add app router
+
+commit 6711ff0a500f48edb639df97b73b64d25949efbd
+Author: larry.yong <larry@ubuntu.(none)>
+Date:   Sat Aug 31 23:02:59 2013 -0700
+
+    add wsgi service.
+
 commit 10828b93492f9107fd42e41855ffb7c3517932c0
 Author: larry.yong <larry@ubuntu.(none)>
 Date:   Wed Aug 28 08:05:40 2013 -0700
