@@ -3,6 +3,7 @@ import webob.exc
 from nezha import exception
 from nezha.api import wsgi
 from nezha.handles import servers
+from nezha.handles import api as handles_api
 from nezha.openstack.common import log as logging
 
 
@@ -18,15 +19,19 @@ class ServersController(object):
 
     def show(self, req, server_id):
         try:
-            server = servers.get_server(server_id)
+            context = req.environ['context']
+
+            server = servers.get_server(server_id, context)
+            iptables = handles_api.API().get_all_iptables_by_host(context, server.host)
+
         except exception.NotFound, e:
             raise webob.exc.HTTPNotFound()
 
-        return dict(server)
+        return {'server': dict(server), 'iptables': iptables}
 
     def create(self, req, body):
         try:
-            server = servers.create_server(body)
+            server = servers.create_server(body, context)
         except exception.Forbidden as e:
             raise webob.exc.HTTPForbidden(explanation=unicode(e))
         return dict(server)
