@@ -31,6 +31,7 @@ class ServersController(object):
 
     def create(self, req, body):
         try:
+            context = req.environ['context']
             server = servers.create_server(body, context)
         except exception.Forbidden as e:
             raise webob.exc.HTTPForbidden(explanation=unicode(e))
