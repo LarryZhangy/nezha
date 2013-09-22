@@ -17,7 +17,7 @@ if os.path.exists(os.path.join(possible_topdir, "nezha", "__init__.py")):
 from nezha.openstack.common import gettextutils
 from nezha.openstack.common import log as logging
 from nezha.openstack.common.rpc import service as rpc_service
-from nezha import version
+from nezha import config
 from nezha import service
 from nezha.handles import manager
 
@@ -38,8 +38,7 @@ CONF.register_opts(host_opts)
 
 
 if __name__ == '__main__':
-    CONF(sys.argv[1:], project='nezha',
-         version=version.version_string())
+    config.parse_args(sys.argv)
     logging.setup("nezha")
     server = rpc_service.Service(CONF.host,
                                 CONF.handle_topic,

@@ -1,3 +1,33 @@
+commit 8c452f66db80eab81acdfd41092f3d04821d2c4b
+Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
+Date:   Tue Sep 10 15:13:55 2013 +0800
+
+    get context when create server.
+
+commit d5f75a70c0083c1091f2dc339dfd708e5cbd81ce
+Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
+Date:   Tue Sep 10 15:01:46 2013 +0800
+
+    change mod of bin
+
+commit 2ba36bdfa6f79fdbab155250ddb4da830b3ab06a
+Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
+Date:   Wed Sep 4 13:27:57 2013 +0800
+
+    add rpc call and cast.
+
+commit 786d6a8d63511abe4a1f1ddf7b66a3ecc9e03791
+Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
+Date:   Wed Sep 4 08:55:57 2013 +0800
+
+    add host column to server table.
+
+commit e210918baee568388099e939abe82530f7b29102
+Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
+Date:   Wed Sep 4 08:55:46 2013 +0800
+
+    add host column to server table.
+
 commit 08a07ec8b46e8e584971a7f7ce6c9b56dd6564c2
 Author: Aliyun Admin <admin@r49e03012.xy2.aliyun.com>
 Date:   Tue Sep 3 14:46:55 2013 +0800

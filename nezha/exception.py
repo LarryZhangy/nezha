@@ -78,3 +78,7 @@ class ServerExists(NezhaException):
 class Forbidden(NezhaException):
     code = 403
     msg_fmt = _("You are not authorized to complite this action.")
+
+def _cleanse_dict(original):
+    """Strip all admin_password, new_pass, rescue_pass keys from a dict."""
+    return dict((k, v) for k, v in original.iteritems() if not "_pass" in k)

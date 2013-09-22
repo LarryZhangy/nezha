@@ -4,8 +4,7 @@ pyflakes==0.7.2
 hacking>=0.5.6,<0.7
 fixtures>=0.3.12
 testtools>=0.9.32
-testrepository
-python-subunit
+mock
 coverage>=3.6
 nose
 tox
