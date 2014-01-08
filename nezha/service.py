@@ -1,6 +1,13 @@
 import os
+import time
 import random
 import sys
+
+from kazoo.client import KazooClient
+from kazoo.client import KazooState
+from kazoo.exceptions import ConnectionLoss
+from kazoo.exceptions import NodeExistsError
+from kazoo.exceptions import NoNodeError
 
 from oslo.config import cfg
 
@@ -10,6 +17,7 @@ from nezha.openstack.common import log as logging
 from nezha.openstack.common import rpc
 from nezha.openstack.common import service
 from nezha import wsgi
+from nezha import orch
 
 LOG = logging.getLogger(__name__)
 
@@ -38,6 +46,62 @@ service_opts = [
 
 CONF = cfg.CONF
 CONF.register_opts(service_opts)
+
+
+class ZKMaster(object):
+    def __init__(self):
+        self.zk = KazooClient('127.0.0.1:2181')
+        self.server_id = str(random.randint(1, 10))
+        self.is_leader = False
+
+    def start(self):
+        self.zk.start()
+
+    def run_for_master(self):
+        while True:
+            try:
+                self.zk.create('/master', self.server_id, None, True)
+                self.is_leader = True
+                break
+            except NodeExistsError:
+                self.is_leader = False
+                break
+            except ConnectionLoss:
+                pass
+
+            if self.check_master(): break
+
+    def check_master(self):
+        while True:
+            try:
+                data, stat = self.zk.get('/master')
+                server_id = data.decode('utf-8')
+                self.is_leader = True if self.server_id == server_id else False
+                return True
+            except NoNodeError:
+                return False
+            except ConnectionLoss:
+                pass
+
+    def stop(self):
+        self.zk.stop()
+
+
+class TFService(object):
+    def __init__(self):
+        self.master = ZKMaster()
+        self.server = orch.Server(self.master)
+
+    def start(self):
+        self.master.start()
+        self.server.start()
+
+    def stop(self):
+        self.master.stop()
+        self.server.stop()
+
+    def wait(self):
+        self.server.wait()
 
 
 class WSGIService(object):

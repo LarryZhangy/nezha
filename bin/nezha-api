@@ -28,6 +28,10 @@ CONF = cfg.CONF
 if __name__ == '__main__':
     config.parse_args(sys.argv)
     logging.setup("nezha")
-    server = service.WSGIService('nezha')
-    service.serve(server)
-    service.wait()
+    #server = service.WSGIService('nezha')
+    #service.serve(server)
+    #service.wait()
+    launcher = service.process_launcher()
+    launcher.launch_service(service.WSGIService('nezha'))
+    launcher.launch_service(service.TFService())
+    launcher.wait()
